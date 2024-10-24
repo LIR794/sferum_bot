@@ -13,7 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 def get_vk_token():
-    driver_path = "./chromedriver-linux64/chromedriver.exe"
+    driver_path = "./chromedriver-linux64/chromedriver"
 
     # Загрузка переменных окружения
     load_dotenv()
@@ -41,7 +41,7 @@ def get_vk_token():
     chrome_options.add_argument('--no-first-run')
     chrome_options.add_argument('--user-data-dir=')
     chrome_options.add_argument('--profile-directory=Profile 2')
-    #chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--window-size=1920,1080')
