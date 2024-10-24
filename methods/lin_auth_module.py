@@ -39,6 +39,13 @@ def get_vk_token():
     chrome_options.add_argument('--ignore-certificate-errors-spki-list')
     chrome_options.add_argument('--ignore-ssl-errors')
     chrome_options.add_argument('--no-first-run')
+    chrome_options.add_argument('--user-data-dir=')
+    chrome_options.add_argument('--profile-directory=Profile 2')
+    #chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--window-size=1920,1080')
+
 
     try:
         # Запуск Chrome
@@ -132,6 +139,4 @@ def get_vk_token():
         print(f"Ошибка при выполнении запроса к API: {e}")
         return None
     finally:
-        # Очистка сессии requests
-        session.cookies.clear()  # Очищаем cookies в сессии
         session.close()  # Закрываем сессию

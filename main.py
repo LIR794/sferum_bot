@@ -3,7 +3,7 @@ from methods.match_module import get_schedule_changes
 from methods.send import send_main_sferum
 from methods.send import send_all_sferum
 from methods.send import send_test_sferum
-from methods.auth_module import get_vk_token
+from methods.lin_auth_module import get_vk_token
 
 date_now = datetime.datetime.now()
 
