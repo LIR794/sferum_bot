@@ -13,7 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 def get_vk_token():
-    driver_path = "./chromedriver-win64/chromedriver.exe"
+    driver_path = "./chromedriver-linux64/chromedriver.exe"
 
     # Загрузка переменных окружения
     load_dotenv()
