@@ -102,8 +102,8 @@ def get_vk_token():
         cookies = driver.get_cookies()
 
     except Exception as e:
-        print(f"Ошибка при работе с WebDriver: {e}")
-        return None
+        print(f"Сессия активна или произошла ошибка при работе с WebDriver: {e}")
+        cookies = driver.get_cookies()
     finally:
         # Завершение сессии и закрытие браузера
         driver.quit()  # Закрытие браузера
