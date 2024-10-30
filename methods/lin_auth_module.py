@@ -14,23 +14,26 @@ from selenium.webdriver.support import expected_conditions as EC
 
 def get_vk_token():
     driver_path = "/app/chromedriver-linux64/chromedriver"
-
-    # Загрузка переменных окружения
     load_dotenv()
+
+    print("Загрузка переменных окружения...")
 
     # Генерация временного кода
     try:
         tmp_auth = mintotp.totp(os.getenv('hash_vk'))
+        print(f"Сгенерированный временный код TOTP: {tmp_auth}")
     except Exception as e:
         print(f"Ошибка генерации временного кода: {e}")
         return None
 
     # Проверка времени жизни кода
     ttl = time_to_live(tmp_auth)
+    print(f"Время жизни кода TOTP: {ttl} секунд")
     if ttl <= 5:
         print("Ожидание для обновления кода TOTP...")
         time.sleep(8)
         tmp_auth = mintotp.totp(os.getenv('hash_vk'))
+        print(f"Обновленный временный код TOTP: {tmp_auth}")
 
     # Настройки для Chrome
     chrome_options = Options()
@@ -46,22 +49,54 @@ def get_vk_token():
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--window-size=1920,1080')
 
+    driver = webdriver.Chrome(service=ChromeService(executable_path=driver_path), options=chrome_options)
+    
+    # Авторизация через вк
+    driver.get("https://vk.com")
 
     try:
-        # Запуск Chrome
-        driver = webdriver.Chrome(service=ChromeService(executable_path=driver_path), options=chrome_options)
-        driver.get("https://web.vk.me/")
-
-        # Выполнение шагов авторизации
-        element = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CLASS_NAME, "vkuiSimpleCell"))
-        )
-        element[1].click()
-
-        element = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.NAME, "login"))
+        element = WebDriverWait(driver, 5).until(
+            EC.presence_of_all_elements_located((By.ID, "index_email"))
         )
         element[0].send_keys(os.getenv('number'))
+
+        element = WebDriverWait(driver, 5).until(
+            EC.presence_of_all_elements_located((By.XPATH, "//span[@class='FlatButton__content' and text()='Войти']"))
+        )
+        element[0].click()
+
+        try:
+
+            element = WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located((By.NAME, "password"))
+            )
+            element[0].send_keys(os.getenv('pass'))
+
+            element = WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located((By.CLASS_NAME, "vkuiButton__content"))
+            )
+            element[0].click()
+            
+            print("Авторизация прошла успешно")
+        except Exception as e:
+            print("Вход по сохранённым данным")
+        try:
+            element = WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located((By.ID, "otp"))
+            )
+            try:
+                tmp_auth = mintotp.totp(os.getenv('hash_vk'))
+                ttl = time_to_live(tmp_auth)
+                if ttl <= 3:
+                    time.sleep(6)
+                    print("Ожидание для обновления кода TOTP...")
+                    tmp_auth = mintotp.totp(os.getenv('hash_vk'))
+            except Exception as e:
+                print(f"Ошибка генерации временного кода: {e}")
+                return None
+            element[0].send_keys(tmp_auth)            
+        except Exception as e:
+            print("OTP поля нет") 
 
         element = WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.CLASS_NAME, "vkuiButton__content"))
@@ -72,42 +107,37 @@ def get_vk_token():
             EC.presence_of_all_elements_located((By.NAME, "password"))
         )
         element[0].send_keys(os.getenv('pass'))
-
+        
         element = WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.CLASS_NAME, "vkuiButton__content"))
         )
         element[0].click()
-
-        # Ввод временного кода TOTP
-        element = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.NAME, "otp"))
-        )
-        element[0].send_keys(tmp_auth)
-
-        element = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CLASS_NAME, "vkuiButton__content"))
-        )
-        element[0].click()
-
-        # Завершаем авторизацию
-        button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//div[@class='vkc__AuthSimpleScreen__bottom']//button//span[contains(text(), 'Продолжить')]"))
-        )
-        button.click()
-
-        # Небольшая задержка перед получением cookies
-        time.sleep(2)
-
-        # Получение всех cookies после авторизации
-        cookies = driver.get_cookies()
-
     except Exception as e:
-        print(f"Сессия активна или произошла ошибка при работе с WebDriver: {e}")
-        cookies = driver.get_cookies()
-    finally:
-        # Завершение сессии и закрытие браузера
-        driver.quit()  # Закрытие браузера
+        print(f"Сессия доступна или произошла ошибка при работе с WebDriver: {e}")
+    
+    time.sleep(5)
 
+    driver.get("https://web.vk.me/")    
+    
+    try:
+        element = WebDriverWait(driver, 5).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME, "vkuiSimpleCell"))
+        )
+        element[1].click()
+
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME, "vkuiButton__content"))
+        )
+        element[0].click()
+
+        cookies = driver.get_cookies()
+    except Exception as e:
+        cookies = driver.get_cookies()
+        print("Прошлая авторизация не прошла")
+
+    finally:
+        driver.quit()  # Закрытие браузера
+  
     # Преобразование cookies в формат, подходящий для requests
     session = requests.Session()
     for cookie in cookies:

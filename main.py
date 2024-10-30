@@ -1,8 +1,10 @@
 import datetime
 from methods.match_module import get_schedule_changes
+from methods.bells import get_bells_changes
 from methods.send import send_main_sferum
 from methods.send import send_all_sferum
 from methods.send import send_test_sferum
+from methods.send import send_bells_sferum
 from methods.lin_auth_module import get_vk_token
 
 date_now = datetime.datetime.now()
@@ -20,10 +22,12 @@ tommorow = (date_now + datetime.timedelta(days=1)).strftime('%d.%m.%Y')
 
 chats = "2000000024"
 
-today_list = []
+today_groups_list = []
+today_bells_list = []
 today_type = 'сегодня'
 
-tommorow_list = []
+tommorow_groups_list = []
+tommorow_bells_list = []
 tommorow_type = 'завтра'
 
 message_status = []
@@ -37,11 +41,20 @@ if 'response' not in message_status[0]:
     send_test_sferum(f"{date_now.strftime('%H:%M:%S')}",chats,message_status)
     exit()
 
-get_schedule_changes(current_date, today_list)
-get_schedule_changes(tommorow, tommorow_list)
+get_schedule_changes(current_date, today_groups_list)
+get_schedule_changes(tommorow, tommorow_groups_list)
 
-today_list_str = ", ".join(today_list)
-tommorow_list_str = ", ".join(tommorow_list)
+get_bells_changes(current_date, today_bells_list)
+get_bells_changes(tommorow, tommorow_bells_list)
 
-send_main_sferum(today_type,today_list_str,chats,message_status)
-send_main_sferum(tommorow_type,tommorow_list_str,chats, message_status)
+today_groups_list_str = ", ".join(today_groups_list)
+tommorow_groups_list_str = ", ".join(tommorow_groups_list)
+
+today_bells_list_str = ", ".join(today_bells_list)
+tommorow_bells_list_str = ", ".join(tommorow_bells_list)
+
+send_main_sferum(today_type,today_groups_list_str,chats,message_status)
+send_main_sferum(tommorow_type,tommorow_groups_list_str,chats, message_status)
+
+send_bells_sferum(today_type,today_bells_list_str,chats,message_status)
+send_bells_sferum(tommorow_type,tommorow_bells_list_str,chats,message_status)
