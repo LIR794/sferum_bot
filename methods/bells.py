@@ -19,7 +19,7 @@ def get_bells_changes(current_date, builings_to_send):
     data = response.json()
 
     # Проверка наличия файла с предыдущими данными
-    if not os.path.isfile(f"bells - {current_date}.json"):
+    if not os.path.isfile(f"/app/data/changes/bells - {current_date}.json"):
         for dicts in data:
             bells_type = dicts["type"]
             bells_building = dicts["building"]
@@ -37,7 +37,7 @@ def get_bells_changes(current_date, builings_to_send):
         
         return
     
-    with open(f"bells - {current_date}.json", encoding="utf-8") as f:
+    with open(f"/app/data/changes/bells - {current_date}.json", encoding="utf-8") as f:
         file_data = json.load(f)
 
     for dicts in data:
@@ -61,10 +61,5 @@ def get_bells_changes(current_date, builings_to_send):
                 builings_to_send.append(bells_building)
 
 
-    with open(f'bells - {current_date}.json', 'w', encoding='utf-8') as file:
+    with open(f'/app/data/changes/bells - {current_date}.json', 'w', encoding='utf-8') as file:
         json.dump(file_data, file, ensure_ascii=False)                
-
-    # with open(f"bells - {current_date}.json", encoding="utf-8") as f:
-    #     file_data = json.load(f)
-    # for dicts in data:
-    #     if dicts["type"] == 

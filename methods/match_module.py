@@ -26,7 +26,7 @@ def get_schedule_changes(date, groups_to_send):
     }
 
     # Проверка наличия файла с предыдущими данными
-    if not os.path.isfile(f"./changes/{current_date}.json"):
+    if not os.path.isfile(f"/app/data/changes/{current_date}.json"):
         for schedule in data['schedules']:
             group_name = schedule['group_name']
             schedule_type = schedule['schedule']['type']
@@ -39,7 +39,7 @@ def get_schedule_changes(date, groups_to_send):
                 group_data["schedules"].append(schedule_entry)
 
                 # Сохраняем новые данные в файл с текущей датой
-                with open(f'./changes/{current_date}.json', 'w', encoding='utf-8') as file:
+                with open(f'/app/data/changes/{current_date}.json', 'w', encoding='utf-8') as file:
                     json.dump(group_data, file, ensure_ascii=False)
 
                 # Добавляем группу в список изменений
@@ -47,7 +47,7 @@ def get_schedule_changes(date, groups_to_send):
         return
 
     # Если файл существует, загружаем предыдущие данные
-    with open(f"./changes/{current_date}.json", encoding="utf-8") as f:
+    with open(f"/app/data/changes/{current_date}.json", encoding="utf-8") as f:
         file_data = json.load(f)
 
     # Проверяем, если данные обновились
@@ -76,5 +76,5 @@ def get_schedule_changes(date, groups_to_send):
                     groups_to_send.append(group_name)  # Добавляем группу в список изменений
 
         # Сохраняем новые данные в файл с текущей датой
-        with open(f'./changes/{current_date}.json', 'w', encoding='utf-8') as file:
+        with open(f'/app/data/changes/{current_date}.json', 'w', encoding='utf-8') as file:
             json.dump(group_data, file, ensure_ascii=False)
