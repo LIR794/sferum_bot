@@ -18,23 +18,6 @@ def get_vk_token():
 
     print("Загрузка переменных окружения...")
 
-    # Генерация временного кода
-    try:
-        tmp_auth = mintotp.totp(os.getenv('hash_vk'))
-        print(f"Сгенерированный временный код TOTP: {tmp_auth}")
-    except Exception as e:
-        print(f"Ошибка генерации временного кода: {e}")
-        return None
-
-    # Проверка времени жизни кода
-    ttl = time_to_live(tmp_auth)
-    print(f"Время жизни кода TOTP: {ttl} секунд")
-    if ttl <= 5:
-        print("Ожидание для обновления кода TOTP...")
-        time.sleep(8)
-        tmp_auth = mintotp.totp(os.getenv('hash_vk'))
-        print(f"Обновленный временный код TOTP: {tmp_auth}")
-
     # Настройки для Chrome
     chrome_options = Options()
     chrome_options.add_argument("--disable-gpu")
