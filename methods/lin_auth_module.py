@@ -14,7 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 def get_vk_token():
     driver_path = "/app/chromedriver-linux64/chromedriver"
-    load_dotenv()
+    load_dotenv("/app/data/.env")
 
     print("Загрузка переменных окружения...")
 
@@ -48,6 +48,11 @@ def get_vk_token():
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--window-size=1920,1080')
+    chrome_options.add_argument("--disable-popup-blocking")
+    chrome_options.add_experimental_option("prefs", {
+        "profile.default_content_setting_values.notifications": 2,  # Отключение уведомлений
+        "profile.default_content_setting_values.popups": 2         # Отключение всплывающих окон
+    })
 
     driver = webdriver.Chrome(service=ChromeService(executable_path=driver_path), options=chrome_options)
     
@@ -55,12 +60,12 @@ def get_vk_token():
     driver.get("https://vk.com")
 
     try:
-        element = WebDriverWait(driver, 5).until(
+        element = WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.ID, "index_email"))
         )
         element[0].send_keys(os.getenv('number'))
 
-        element = WebDriverWait(driver, 5).until(
+        element = WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.XPATH, "//span[@class='FlatButton__content' and text()='Войти']"))
         )
         element[0].click()
