@@ -49,7 +49,7 @@ def get_vk_token():
         element[0].send_keys(os.getenv('number'))
 
         element = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.XPATH, "//span[@class='FlatButton__content' and text()='Войти']"))
+            EC.presence_of_all_elements_located((By.XPATH, "//button[contains(@class, 'FlatButton') and contains(@class, 'VkIdForm__signInButton')]"))
         )
         element[0].click()
 
