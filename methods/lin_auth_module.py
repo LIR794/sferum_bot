@@ -144,7 +144,7 @@ def get_vk_token():
             # Проверка наличия второго токена
             if len(tokens_list) > 1:
                 second_access_token = tokens_list[1]['access_token']
-                set_key(dotenv_path=".env", key_to_set="token", value_to_set=f"{second_access_token}")
+                set_key(dotenv_path="/app/data/.env", key_to_set="token", value_to_set=f"{second_access_token}")
                 return second_access_token
             else:
                 print("Не удалось найти второй access_token, возможно структура ответа изменилась")
