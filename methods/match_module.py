@@ -29,8 +29,8 @@ def get_schedule_changes(date, groups_to_send):
     if not os.path.isfile(f"/app/data/changes/{current_date}.json"):
         for schedule in data['schedules']:
             group_name = schedule['group_name']
-            schedule_type = schedule['schedule']['type']
-            schedule_data = schedule['schedule']['lessons']
+            schedule_type = schedule['type']
+            schedule_data = schedule['lessons']
 
             if schedule_type == 'changes':
                 schedule_entry = {
@@ -54,8 +54,8 @@ def get_schedule_changes(date, groups_to_send):
     if data['last_updated'] != file_data['last_updated']:
         for schedule in data['schedules']:
             group_name = schedule['group_name']
-            schedule_type = schedule['schedule']['type']
-            schedule_data = schedule['schedule']['lessons']
+            schedule_type = schedule['type']
+            schedule_data = schedule['lessons']
 
             # Проверка на тип 'changes'
             if schedule_type == 'changes':
