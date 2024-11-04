@@ -32,7 +32,7 @@ def get_bells_changes(current_date, builings_to_send):
 
                 builings_to_send.append(dicts["building"])
         
-        with open(f'bells - {current_date}.json', 'w', encoding='utf-8') as file:
+        with open(f'/app/data/changes/bells - {current_date}.json', 'w', encoding='utf-8') as file:
             json.dump(bells_data, file, ensure_ascii=False)
         
         return
