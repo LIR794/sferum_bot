@@ -1,7 +1,7 @@
 import requests
 import json
 import os
-
+import
 def get_schedule_changes(date, groups_to_send):
     
     current_date = date
