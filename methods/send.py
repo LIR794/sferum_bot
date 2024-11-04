@@ -3,14 +3,14 @@ import os
 import random
 from dotenv import load_dotenv
 
+load_dotenv("/app/data/.env")
+
 def send_main_sferum (date_type, groups, chats_id, status):
     
         if not groups:
             print("Изменений в группах нет")
             return
     
-        load_dotenv()
-
         token = os.getenv('token')
 
         peer_id = f'{chats_id}'
@@ -36,8 +36,6 @@ def send_main_sferum (date_type, groups, chats_id, status):
 
 def send_test_sferum (time, chats_id, status):
     
-        load_dotenv()
-
         token = os.getenv('token')
 
         peer_id = f'{chats_id}'
@@ -67,8 +65,6 @@ def send_bells_sferum (date_type, buildings, chats_id, status):
         if not buildings:
             print("Изменений в расписании нет")
             return
-    
-        load_dotenv()
 
         token = os.getenv('token')
 
@@ -94,8 +90,6 @@ def send_bells_sferum (date_type, buildings, chats_id, status):
         status.append(msg)
 
 def send_all_sferum (message,chats_id,status):
-    
-        load_dotenv()
 
         token = os.getenv('token')
 

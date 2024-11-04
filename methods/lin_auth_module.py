@@ -14,26 +14,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 def get_vk_token():
     driver_path = "/app/chromedriver-linux64/chromedriver"
-    load_dotenv()
+    load_dotenv("/app/data/.env")
 
     print("Загрузка переменных окружения...")
-
-    # Генерация временного кода
-    try:
-        tmp_auth = mintotp.totp(os.getenv('hash_vk'))
-        print(f"Сгенерированный временный код TOTP: {tmp_auth}")
-    except Exception as e:
-        print(f"Ошибка генерации временного кода: {e}")
-        return None
-
-    # Проверка времени жизни кода
-    ttl = time_to_live(tmp_auth)
-    print(f"Время жизни кода TOTP: {ttl} секунд")
-    if ttl <= 5:
-        print("Ожидание для обновления кода TOTP...")
-        time.sleep(8)
-        tmp_auth = mintotp.totp(os.getenv('hash_vk'))
-        print(f"Обновленный временный код TOTP: {tmp_auth}")
 
     # Настройки для Chrome
     chrome_options = Options()
@@ -48,6 +31,11 @@ def get_vk_token():
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--window-size=1920,1080')
+    chrome_options.add_argument("--disable-popup-blocking")
+    chrome_options.add_experimental_option("prefs", {
+        "profile.default_content_setting_values.notifications": 2,  # Отключение уведомлений
+        "profile.default_content_setting_values.popups": 2         # Отключение всплывающих окон
+    })
 
     driver = webdriver.Chrome(service=ChromeService(executable_path=driver_path), options=chrome_options)
     
@@ -55,13 +43,13 @@ def get_vk_token():
     driver.get("https://vk.com")
 
     try:
-        element = WebDriverWait(driver, 5).until(
+        element = WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.ID, "index_email"))
         )
         element[0].send_keys(os.getenv('number'))
 
-        element = WebDriverWait(driver, 5).until(
-            EC.presence_of_all_elements_located((By.XPATH, "//span[@class='FlatButton__content' and text()='Войти']"))
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, "//button[contains(@class, 'FlatButton') and contains(@class, 'VkIdForm__signInButton')]"))
         )
         element[0].click()
 
@@ -156,7 +144,7 @@ def get_vk_token():
             # Проверка наличия второго токена
             if len(tokens_list) > 1:
                 second_access_token = tokens_list[1]['access_token']
-                set_key(dotenv_path=".env", key_to_set="token", value_to_set=f"{second_access_token}")
+                set_key(dotenv_path="/app/data/.env", key_to_set="token", value_to_set=f"{second_access_token}")
                 return second_access_token
             else:
                 print("Не удалось найти второй access_token, возможно структура ответа изменилась")
