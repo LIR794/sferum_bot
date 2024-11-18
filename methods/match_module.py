@@ -12,7 +12,7 @@ def get_schedule_changes(date, groups_to_send):
     }
 
     # Запрос данных расписания
-    response = requests.get(f"https://пары.ркэ.рф/api/schedules/public?date={current_date}", headers=header)
+    response = requests.get(f"https://апи.пары.ркэ.рф/api/schedules/public?date={current_date}", headers=header)
 
     if response.status_code != 200:
         print(f"Ошибка при загрузке данных: {response.status_code}")

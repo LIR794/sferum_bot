@@ -10,7 +10,7 @@ def get_bells_changes(current_date, builings_to_send):
         "Accept": "application/json",
     }
 
-    response = requests.get(f"https://пары.ркэ.рф/api/bells/public?date={current_date}", headers=header)
+    response = requests.get(f"https://апи.пары.ркэ.рф/api/bells/public?date={current_date}", headers=header)
 
     if response.status_code != 200:
         print(f"Ошибка при загрузке данных: {response.status_code}")
