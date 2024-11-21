@@ -15,6 +15,7 @@ number=""
 pass=""
 hash_vk=""
 token=""
+chat_id=""
 ```
 Для пулла образа:
 ```bash
