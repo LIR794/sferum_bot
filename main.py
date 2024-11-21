@@ -1,4 +1,6 @@
 import datetime
+import os
+from dotenv import load_dotenv
 from methods.match_module import get_schedule_changes
 from methods.bells import get_bells_changes
 from methods.send import send_main_sferum
@@ -13,6 +15,8 @@ current_date = date_now.strftime('%d.%m.%Y')
 
 tommorow = (date_now + datetime.timedelta(days=1)).strftime('%d.%m.%Y')
 
+load_dotenv("/app/data/.env")
+
 """
 Список id чатов:
     "РКЭ" = 
@@ -20,7 +24,7 @@ tommorow = (date_now + datetime.timedelta(days=1)).strftime('%d.%m.%Y')
 Для рассылки в несколько чатов, необходимо передать значения через запятую
 """
 
-chats = "2000000024"
+chats = os.getenv('chat_id')
 
 today_groups_list = []
 today_bells_list = []
