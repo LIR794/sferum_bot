@@ -37,7 +37,7 @@ tommorow_type = 'завтра'
 message_status = []
 
 # "TOKEN TEST"
-send_all_sferum("test",chats,message_status)
+send_all_sferum("test","2000000023",message_status)
 print(message_status)
 
 if 'response' not in message_status[0]:
