@@ -20,7 +20,7 @@ load_dotenv("/app/data/.env")
 """
 Список id чатов:
     "РКЭ" = 
-    "Test" = 2000000023
+    "Test" = 2000000014
 Для рассылки в несколько чатов, необходимо передать значения через запятую
 """
 
@@ -37,7 +37,7 @@ tommorow_type = 'завтра'
 message_status = []
 
 # "TOKEN TEST"
-send_all_sferum("test","2000000023",message_status)
+send_all_sferum("test","2000000014",message_status)
 print(message_status)
 
 if 'response' not in message_status[0]:
