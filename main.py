@@ -42,7 +42,7 @@ print(message_status)
 
 if 'response' not in message_status[0]:
     get_vk_token()
-    send_test_sferum(f"{date_now.strftime('%H:%M:%S')}",chats,message_status)
+    send_test_sferum(f"{date_now.strftime('%H:%M:%S')}","2000000024",message_status)
     exit()
 
 get_schedule_changes(current_date, today_groups_list)
